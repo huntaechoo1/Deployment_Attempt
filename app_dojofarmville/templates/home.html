@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Welcome {{loggedInUser.fname}}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{%static 'farmville_app/css/home.css' %}">
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <img src="{% static 'farmville_app/images/logo.jpg' %}" alt="Logo Image">
+        </div>
+        <div class="hamburger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/profile" class="bar">My Profile</a></li>
+            <!-- <li><a href="#" class="bar">Work</a></li> -->
+            <li><a href="#" class="bar">Memes</a></li>
+            <li><a href="/farm" class="bar">Dojo Farm</a></li>
+            <li> <a href="/logout"><button class="logout-button">Logout</button></a></li>
+        </ul>
+    </nav>
+
+
+    <div class = "container">
+            <div class="left">
+                <div class = "post">
+                    <form action="/postMessage" method="post" class="form">
+                        {% csrf_token %}
+                        <h4>Post a Message:</h4>
+                        <textarea name="content" placeholder = "{% for message in messages %}{{message}}{% endfor %}"></textarea>
+                        <input type="hidden" name="currentPost" value="{{post.id}}">
+                        <button class="post-btn" type="submit">Post a message</button>
+                    </form>
+
+                    {% for post in allPosts %}
+                        <div class = "display">
+                                <p class = "post_label">{{post.user.username}} -  {% if loggedInUser.id == post.user.id or loggedInUser.is_admin == True %} <span class = "remove"><a href="removeMessage/{{post.id}}">Delete</a></span>{% endif %}</p> 
+                                <p class="content">{{post.content}}</p>
+                                <p><i>Posted on: {{post.created_at}}</i></p>
+                        </div>
+
+                        {% for comment in post.posts.all %}
+                            <div class = "comments">
+                                <p class="smaller">{{comment.user.username}} - {% if loggedInUser.id == comment.user.id or loggedInUser.is_admin == True %} <span class = "remove"><a href="removeComment/{{comment.id}}">Delete</a></span> {% endif %} </p>
+                                <p class="content">{{comment.content}}</p>
+                                <p><i>Posted on: {{comment.created_at}}</i></p>
+                            </div>
+                        {% endfor %}
+                
+                        <div class = "comment">
+                            <form action="/postComment" method="post" class="form">
+                                {% csrf_token %}
+                                <textarea name="content" class = "form-control" cols="30" rows="3" placeholder = "Write a comment here"></textarea>
+                                <input type="hidden" name="currentPost" value="{{post.id}}">
+                                <button class = "comment-btn" type="submit">Post a comment</button>
+                            </form>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+            </div>
+
+            <div class="right">
+                <div class = "event-box">
+                    <h4>Upcoming Events: </h4>
+                    <ul>
+                        {% for event in allEvents %}
+                            <li><a href="#">{{event.name}}</a> - Created by <a href="#">{{event.uploader.username}}</a></li>
+                        {% endfor %}
+                        
+                    </ul>
+                </div>
+
+                <form action="/createEvent" class = "event-form" method = "POST">
+                    <h4>Create Your Own Event</h4>
+                    {% csrf_token %}
+                        <input name="name" class="name" placeholder="Name">
+                        <textarea rows="4" cols="50" name="desc" class="message"  placeholder = "Description of your event"></textarea>
+                        Start Date:<input type="date" name = "startdate" placeholder = "Start Date" class="message">
+                        Start Time:<input type="time" name = "starttime" placeholder = "Start Time" class="message">
+                        End Date: <input type="date" name = "enddate" placeholder = "End Date"  class="message">
+                        End Time: <input type="time" name="endtime" placeholder = "End Time"  class="message">
+                        <input name="submit" class="btn" type="submit" value="Send" class="message">    
+                </form>
+            </div>
+        </div>
+    
+    </div>
+
+    <script>
+        const hamburger = document.querySelector(".hamburger");
+        const navLinks = document.querySelector(".nav-links");
+        const links = document.querySelectorAll(".nav-links li");
+        hamburger.addEventListener('click', ()=>{
+        //Animate Links
+        navLinks.classList.toggle("open");
+        links.forEach(link => {
+            link.classList.toggle("fade");
+        });
+        //Hamburger Animation
+        hamburger.classList.toggle("toggle");
+        });
+    </script>
+</body>
+</html>

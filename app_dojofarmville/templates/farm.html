@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Farm</title>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+	{% load static %}
+</head>
+<body>
+	<!-- <button id="call_backend">RANDOM BUTTON</button>
+	<div id="farm">test</div> -->
+	
+	<style type="text/css">
+		body{
+			background-color: black
+		}
+		.cell{
+			width:100px;
+			height:100px;
+			background-color: brown;
+			border: 2px solid green;
+			text-align: center;
+			color: white;
+			display: inline-block;
+		}
+
+		.crop{
+			border: 1px solid white;
+			padding: 2px;
+		}
+		.seed{
+			height: 28px;
+			width: 28px;
+			display: inline-block;
+		}
+		.cornseed{
+			height: 28px;
+			width: 28px;
+			display: inline-block;
+			background-color: yellow;
+			color: green;
+			border: 2px solid green;
+			text-align: center; line-height: 28px;
+			border-radius: 50%;
+		}
+		.wheatseed{
+			height: 28px;
+			width: 28px;
+			display: inline-block;
+			background-color: gold;
+			color: brown;
+			border: 2px solid brown;
+			text-align: center; line-height: 28px;
+			border-radius: 50%;
+		}
+		.carrotseed{
+			height: 28px;
+			width: 28px;
+			display: inline-block;
+			background-color: orange;
+			color: green;
+			border: 2px solid green;
+			text-align: center; line-height: 28px;
+			border-radius: 50%;
+		}
+		.leekseed{
+			height: 28px;
+			width: 28px;
+			display: inline-block;
+			background-color: blanchedalmond;
+			color: green;
+			border: 2px solid green;
+			text-align: center; line-height: 28px;
+			border-radius: 50%;
+		}
+		.blacktomatoseed{
+			height: 28px;
+			width: 28px;
+			display: inline-block;
+			background-color: black;
+			color: red;
+			border: 2px solid red;
+			text-align: center; line-height: 28px;
+			border-radius: 50%;
+		}
+		.crop{
+			display: inline-block;
+			max-width: 100%;
+			min-width: 100%;
+		}
+
+		*{
+    margin: 0;
+    padding: 0;
+    /* color: #f2f5f7; */
+    font-family: sans-serif;
+    letter-spacing: 1px;
+    font-weight: 300;
+}
+body{
+    overflow-x: hidden;
+}
+nav{
+    /* #131418 */
+    height: 6rem;
+    width: 100vw;
+    background-color: #000000;
+    box-shadow: 0 3px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    position: fixed;
+    z-index: 10;
+}
+
+/*Styling logo*/
+.logo{
+    padding:1vh 1vw;
+    text-align: center;
+}
+.logo img {
+    height: 5rem;
+    width: 5rem;
+}
+
+/*Styling Links*/
+.nav-links{
+    display: flex;
+    list-style: none; 
+    width: 88vw;
+    padding: 0 0.7vw;
+    justify-content: space-evenly;
+    align-items: center;
+    text-transform: uppercase;
+}
+.nav-links li a{
+    color: #f2f5f7;
+    text-decoration: none;
+    margin: 0 0.7vw;
+}
+.nav-links li a:hover {
+    color: #61DAFB;
+}
+.nav-links li {
+    position: relative;
+}
+.nav-links .bar::after {
+    content: "";
+    display: block;
+    height: 3px;
+    width: 0%;
+    background-color: #06a9e5;
+    position: absolute;
+    transition: all ease-in-out 250ms;
+    margin: 0 0 0 10%;
+}
+.nav-links li a:hover::after{
+    width: 80%;
+}
+
+/*Styling Buttons*/
+.logout-button{
+    color: #131418;
+    background-color: #06a9e5;
+    border: 1.5px solid #06a9e5;
+    border-radius: 2em;
+    padding: 0.6rem 0.8rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.logout-button:hover {
+    color: #f2f5f7;
+    background-color: transparent;
+    border:1.5px solid #f2f5f7;
+    transition: all ease-in-out 350ms;
+}
+
+/*Styling Hamburger Icon*/
+.hamburger div{
+    width: 30px;
+    height:3px;
+    background: #f2f5f7;
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+.hamburger{
+    display: none;
+}
+
+/*Stying for small screens*/
+@media screen and (max-width: 800px){
+    nav{
+        position: fixed;
+        z-index: 3;
+    }
+    .hamburger{
+        display:block;
+        position: absolute;
+        cursor: pointer;
+        right: 5%;
+        top: 50%;
+        transform: translate(-5%, -50%);
+        z-index: 2;
+        transition: all 0.7s ease;
+    }
+    .nav-links{
+        position: fixed;
+        background: #131418;
+        height: 100vh;
+        width: 100%;
+        flex-direction: column;
+        clip-path: circle(50px at 90% -20%);
+        -webkit-clip-path: circle(50px at 90% -10%);
+        transition: all 1s ease-out;
+        pointer-events: none;
+    }
+    .nav-links.open{
+        clip-path: circle(1000px at 90% -10%);
+        -webkit-clip-path: circle(1000px at 90% -10%);
+        pointer-events: all;
+    }
+    .nav-links li{
+        opacity: 0;
+    }
+    .nav-links li:nth-child(1){
+        transition: all 0.5s ease 0.2s;
+    }
+    .nav-links li:nth-child(2){
+        transition: all 0.5s ease 0.4s;
+    }
+    .nav-links li:nth-child(3){
+        transition: all 0.5s ease 0.6s;
+    }
+    .nav-links li:nth-child(4){
+        transition: all 0.5s ease 0.7s;
+    }
+    .nav-links li:nth-child(5){
+        transition: all 0.5s ease 0.8s;
+    }
+    .nav-links li:nth-child(6){
+        transition: all 0.5s ease 0.9s;
+        margin: 0;
+    }
+    .nav-links li:nth-child(7){
+        transition: all 0.5s ease 1s;
+        margin: 0;
+    }
+    li.fade{
+        opacity: 1;
+    }
+}
+
+    /*Animating Hamburger Icon on Click*/
+    .toggle .line1{
+        transform: rotate(-45deg) translate(-5px,6px);
+    }
+    .toggle .line2{
+        transition: all 0.7s ease;
+        width:0;
+    }
+    .toggle .line3{
+        transform: rotate(45deg) translate(-5px,-6px);
+	}
+	
+	/* .huge-container{
+		position: relative;
+		top: 6rem;
+	} */
+
+	.huge-container{
+	min-height: 90vh;
+	width: 80%;
+	padding: 2rem 4rem;
+	box-sizing: border-box;
+	position: relative;
+	top: 6rem;
+	margin: 0 auto;
+	background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(3, 0, 0, 0.7));
+	}
+
+	body{
+	background-image: url("/static/farmville_app/images/login.jpg");
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	}
+	</style>
+
+	<nav>
+        <div class="logo">
+            <img src="{% static 'farmville_app/images/logo.jpg' %}" alt="Logo Image">
+        </div>
+        <div class="hamburger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/home" class="bar">Home</a></li>
+            <!-- <li><a href="#" class="bar">Work</a></li> -->
+            <li><a href="#" class="bar">Memes</a></li>
+            <li><a href="#" class="bar">Dojo Farm</a></li>
+            <li> <a href="/logout"><button class="logout-button">Logout</button></a></li>
+        </ul>
+    </nav>
+
+	<div class="huge-container">
+
+		<h1 style="color: white; text-align: center">SH*TTY FARMVILLE</h1>
+		<h4 style="color: white">Planted Plots: {{myPlantedSeeds}}/{{myFarmSize}}</h4>
+		<h4 style="color: white">All my (Unplanted) SEEDS: {{myUnplantedSeeds}}</h4>
+			<div>
+				<p style="color: white; margin: 0;">CORN: {{myUnplantedCornSize}}</p>
+				<p style="color: white; margin: 0;">WHEAT: {{myUnplantedWheatSize}}</p>
+				<p style="color: white; margin: 0;">CARROT: {{myUnplantedCarrotSize}}</p>
+				<p style="color: white; margin: 0;">LEEK: {{myUnplantedLeekSize}}</p>
+				<p style="color: white; margin: 0;">BLACK TOMATO: {{myUnplantedBlackTomatoSize}}</p>
+			</div>
+		<h3 style="color: white">Your MONEY: {{loggedInUser.balance}}</h4>
+	
+		<!-- <form action='/plant' method='post' id="plantCorn">
+			{%csrf_token%}
+			<input type="submit" name="submit" value="PLANT CORN">
+		</form> -->
+		<div>
+		<a href="/grow" style="color:white">GROW</a>
+		<a href="/pick" style="color:white">PICK</a>
+		<a href="/buyLand" style="color:white">BUY LAND</a>
+		<a href="/buyBadge" style="color:white">BUY BADGE</a>
+	
+		<button id = 'cd'>BUTTON</button>
+		</div>
+		
+		
+	
+	<div style="max-width: 48%; display: inline-block;">
+		<div class="crop">
+			<p style="color:white; margin:0px;">Planted Corn Seed {{myPlantedCornSize}}</p>
+			{% for cornseed in myCorn %}
+				{% if cornseed.isPlanted == True %}
+				<div class="cornseed">{{cornseed.isReady}}</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+		<div class="crop">
+			<p style="color:white; margin:0px">Planted Wheat Seed {{myPlantedWheatSize}}</p>
+			{% for wheatseed in myWheat %}
+				{% if wheatseed.isPlanted == True %}
+				<div class="wheatseed">{{wheatseed.isReady}}</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+		<div class="crop">
+			<p style="color:white; margin:0px">Planted Carrot Seed {{myPlantedCarrotSize}}</p>
+			{% for carrotseed in myCarrot %}
+				{% if carrotseed.isPlanted == True %}
+				<div class="carrotseed">{{carrotseed.isReady}}</div>
+				{% endif %}
+			{% endfor %}		
+		</div>
+		<div class="crop">
+			<p style="color:white; margin:0px">Planted Leek Seed {{myPlantedLeekSize}}</p>
+			{% for leekseed in myLeek %}
+				{% if leekseed.isPlanted == True %}
+				<div class="leekseed">{{leekseed.isReady}}</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+		<div class="crop">
+			<p style="color:white; margin:0px">Planted Black Tomato Seed {{myPlantedBlackTomatoSize}}</p>
+			{% for blacktomatoseed in myBlackTomato %}
+				{% if blacktomatoseed.isPlanted == True %}
+				<div class="blacktomatoseed">{{blacktomatoseed.isReady}}</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+		
+	
+	
+		<div style="max-width: 50%; min-width: 49%; display: inline-block; vertical-align: top; padding: 1%">
+			<div style="display: inline-block; max-width: 50%; min-width: 50%; text-align:center;">
+			<a href="/plantCorn" style="color:white; display: block;">PLANT CORN</a>
+			<a href="/plantWheat" style="color:white; display: block;">PLANT WHEAT</a>
+			<a href="/plantCarrot" style="color:white; display: block;">PLANT CARROT</a>
+			<a href="/plantLeek" style="color:white; display: block;">PLANT LEEK</a>
+			<a href="/plantBlackTomato" style="color:white; display: block;">PLANT BLACK TOMATO</a>
+			</div>
+			<div style="display: inline-block; max-width: 50%; min-width: 49%; text-align: center">
+			<a href="/buyCorn" style="color:white; display: block;">BUY CORN SEED</a>
+			<a href="/buyWheat" style="color:white; display: block;">BUY WHEAT SEED</a>
+			<a href="/buyCarrot" style="color:white; display: block;">BUY CARROT SEED</a>
+			<a href="/buyLeek" style="color:white; display: block;">BUY LEEK SEED</a>
+			<a href="/buyBlackTomato" style="color:white; display: block;">BUY BLACK TOMATO SEED</a>
+			</div>
+		</div>
+	
+		<!-- <h3 id ='plantCorn' style="color:white">PLANT CORN</h3> -->
+	
+		<!-- <div style="border: 1px solid black">
+			<div style="border:1px solid black; display: inline-block;">
+			{% for corn in myCorn %}
+				<p>{{corn.name}}, {{corn.isReady}}/100</p>
+			{% endfor %}
+			</div>
+			<div style="border:1px solid black; display: inline-block;">
+			{% for wheat in myWheat %}
+				<p>{{wheat.name}}, {{wheat.isReady}}/100</p>
+			{% endfor %}
+			</div>
+			<div style="border:1px solid black; display: inline-block;">
+			{% for carrot in myCarrot %}
+				<p>{{carrot.name}}, {{carrot.isReady}}/100</p>
+			{% endfor %}
+			</div>
+			<div style="border:1px solid black; display: inline-block;">
+			{% for leek in myLeek %}
+				<p>{{leek.name}}, {{leek.isReady}}/100</p>
+			{% endfor %}
+			</div>
+			<div style="border:1px solid black; display: inline-block;">
+			{% for blackTomato in myBlackTomato %}
+				<p>{{blackTomato.name}}, {{blackTomato.isReady}}/100</p>
+			{% endfor %}
+			</div>
+		</div> -->
+	</div>
+
+
+	<script type="text/javascript">
+
+	// var world;
+	// $.get('/getworld', function(data){
+	// 	console.log(data['world']);
+	// }, 'json')
+	// console.log(world)
+	
+
+
+	// function useReturnData(data){
+	//     console.log(data['world']);
+	//     d = data['world'];
+	//     return d
+	// };
+	// var world;
+	//		$.ajax({
+	//     type:'post',
+	//     url: '/getworld',
+	//     dataType:'JSON',
+	//     success: function(data){
+	//         world = useReturnData(data);
+	//         console.log(world);
+	//         return world
+	//     }
+
+	// });
+	// var size = "{{size}}";
+	// var world;
+	// function renderWorld(){
+	// 	world = [];
+	// 	for(var i = 0; i<size; i++){
+	// 		world.push([0,0,0,0,0,0,0,0,0,0])
+	// 	}
+	// 	return world
+	// }
+
+	// function createFarm(){
+	// 	var output = '';
+	// 	for(var i=0; i<world.length; i++){
+	// 		output += '<div class = "row" id = "row'+i+'">'
+	// 		for(var j = 0; j<10; j++){
+	// 			if(world[i][j] == 0){
+	// 				output += '<div value = "empty" class = "cell" id ='+i+j+'">'+i+j+'</div>'
+	// 			}
+	// 			if(world[i][j] == 1){
+	// 				output += '<div value = "corn" class = "cell" id ='+i+j+'">'+i+j+'</div>'
+	// 			}
+	// 			if(world[i][j] == 2){
+	// 				output += '<div value = "wheat" class = "cell" id ='+i+j+'">'+i+j+'</div>'
+	// 			}
+				
+	// 		}
+	// 		output += '</div>'
+	// 	}
+	// 	document.getElementById('farm').innerHTML = output;
+	// }
+	// renderWorld()
+	// createFarm()
+
+	$('#plantCorn').click(function(){
+		update();
+	})
+
+	function update(){
+	    $.ajax({
+	      method: "POST",
+	      url: "/plantCorn",
+	      data: {},
+	      success: function(data) {
+	        console.log(data) // check out how data is structured
+
+	        // Update the coin amount
+	        // $('.status').contents()[0].textContent = 'Balance&nbsp'+data.coins
+	      }
+	    })
+	  };
+
+	// var world;
+	// 	$.ajax({
+	//     type:'post',
+	//     url: '/getworld',
+	//     dataType:'JSON',
+	//     success: function(data){
+	//         world = useReturnData(data);
+	//         console.log(world);
+	//         return world
+	//     }
+
+	// $('.cell').click(function(){
+	// 	$(this).css('background-color', 'yellow');
+	// 	console.log(this);
+	// 	$.post('/call_backend', {data:'corn'}, function(res){
+	// 		console.log(res)
+	// 	})
+	// })
+
+	// $('#call_backend').click(function(){
+	// 	$.post('/call_backend', {data: 'corn'}, function(res){
+	// 		console.log(res)
+	// 	})
+	// })
+
+	var btncd = new test();
+
+	function test() {
+	}
+
+	test.prototype.coolDown = function() {
+	    document.getElementById("cd").disabled = "true";
+	    setTimeout(function() {document.getElementById("cd").disabled = "false";}, 2000);
+	}
+
+	window.onload = function() {
+	    document.getElementById("cd").onclick = btncd.coolDown;
+	}
+
+	</script>
+
+	
+
+</body>
+</html>
+
+<!-- 
+	function plantCorn(){
+		$('td').click(function(){
+			$(this).removeClass('empty').addClass('corn');
+			$(this).css('background-color', 'yellow');
+		})
+	}
+
+
+	$('#plantCorn').submit(function(e){
+				e.preventDefault();
+				$.ajax({
+					url: '/plant',
+					method: 'post',
+					data: $(this).serialize(),
+					success: function(serverResponse){
+						console.log('recieved from server', serverResponse)
+					}
+				})
+			});
+ -->
+
+
+
+<!-- 	var size = "{{size}}";
+	function farmCreate(){
+	var body = document.body,
+		tbl  = document.createElement('table');
+	for(var i = 0; i < size; i++){
+		var tr = tbl.insertRow();
+		for(var j = 0; j < 10; j++){
+				var td = tr.insertCell();
+				td.appendChild(document.createTextNode('Empty'));
+			}
+		}
+		body.appendChild(tbl);
+	}
+	farmCreate();
+
+
+ -->
+<!-- 	$(document).ready(function () {
+		plantCorn();
+
+		// $('.plantCorn').submit(function(){
+		// 	alert('submitted')
+		// })
+
+		$('td').addClass('empty');
+
+		$('.empty').hover(function(){
+			$(this).css('background-color', 'purple');
+		}, function(){
+			$('.empty').css('background-color', 'brown');
+		})
+	}) -->

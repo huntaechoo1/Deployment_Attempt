@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Dojo Profile</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'farmville_app/css/profile.css' %}">
+    <style>
+    body{
+        background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0,0,0,0.3)), url("/static/farmville_app/images/login.jpg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        background-attachment: fixed;
+    }
+
+    .container{
+        position: relative;
+        top: 6rem;
+        width: 80%;
+        margin: 0 auto;
+        background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));
+        box-sizing: border-box;
+        padding: 2rem;
+        min-height: 90vh;
+    }
+    
+    .left,
+    .right{
+        padding: 2rem;
+        color: #eee;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .left{
+        width: 20%;
+    }
+
+    #profile-pic{
+        width: 175px;
+        height: 175px;
+        padding-bottom: 2rem;
+    }
+
+    .friends{
+        /* border: 2px solid hsla(204, 70%, 53%, 1); */
+        width: 175px;
+        max-height: 51.75vh;
+        overflow: hidden;
+        overflow-y: scroll;
+
+    }
+
+    .friends p {
+        line-height: 1.25rem;
+    }
+
+    .friend{
+        border-bottom: 2px solid hsla(204, 70%, 53%, 1);
+        padding: .5rem;
+    }
+
+    .friend:last-child{
+        border: none;
+    }
+
+    .right{
+        text-align: left;
+        width: 60%;
+    }
+
+    .top{
+        height: 170px;
+        margin-bottom: 2rem;
+    }
+
+    .name{
+        font-size: 4rem;
+    }
+
+    .badges{
+        /* height: 4rem; */
+        height: 50px;
+        width: 70%;
+        overflow: auto;
+        /* overflow-y: scroll; */
+    }
+
+    .badge{
+        height: 50px;
+        width: 50px;
+        background-color: aquamarine;
+        display:inline-block;
+    }
+
+    .messages{
+        max-height: 80vh;
+        overflow: auto
+    }
+
+    .comments{
+        margin-left: 2rem;
+    }
+    .comment{
+        margin-left: 2rem;
+    }
+
+
+
+
+
+    /* body small screen */
+    @media screen and (max-width: 800px){
+
+    }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <img src="{% static 'farmville_app/images/logo.jpg' %}" alt="Logo Image">
+        </div>
+        <div class="hamburger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/home" class="bar">Home</a></li>
+            <!-- <li><a href="#" class="bar">Work</a></li> -->
+            <li><a href="#" class="bar">Memes</a></li>
+            <li><a href="#" class="bar">Dojo Farm</a></li>
+            <li> <a href="/logout"><button class="logout-button">Logout</button></a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="left">
+            <div class="profile-img">
+                <img id="profile-pic" src="{% static 'farmville_app/images/ninja_icon.png' %}" alt="">
+            </div>
+            <div class="friends">
+                {% for i in "aaaaaaaaaaaaa" %}
+                <div class="friend">
+                        <p>Nicolas Ricaldi</p>
+                        <p>status: online</p>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <div class="right">
+            <div class="top">
+                <div class="title">
+                    <h1 class="name">{{loggedInUser.fname}} {{loggedInUser.lname}}</h1>
+                </div>
+                <p>Badges:</p>
+                <div class="badges">
+                    {% for i in "aaaaaaaaaaaaaaaa"%}
+                    <div class="badge"></div>
+                    {% endfor %}
+                </div>
+            </div>
+            <h2>My Posts: </h2>
+            <div class="posts">
+                <div class="messages">
+                    {% for post in allPosts %}
+                        <div class = "display">
+                            <h3 class = "post_label">{{post.user.username}}</h3> 
+                            <p>{{post.content}}</p>
+                            {% if loggedInUser.id == post.user.id  or loggedInUser.is_admin == True %} <p class = "remove"><a href="removeMessage/{{post.id}}">Delete</a></p> {% endif %}
+                        </div>
+            
+                        {% for comment in post.posts.all %}
+                            <div class = "comments">
+                                <p class = "comment"><span style = "font-weight: bolder">
+                                <h4 class="smaller">{{comment.user.username}} - <span class="smaller">{{comment.created_at}}</span> </h4>
+                                <p class="comment">{{comment.content}}</p>
+                                {% if loggedInUser.id == comment.user.id %} <p class = "removeComment"><a href="removeComment/{{comment.id}}">Delete</a></p> {% endif %}
+                            </div>
+                        {% endfor %}
+            
+                        <div class = "comment">
+                            <form action="/postComment" method="post">
+                                {% csrf_token %}
+                                <h5>Comment</h5>
+                                <textarea name="content" class = "form-control" cols="30" rows="3" placeholder = "Write a comment here"></textarea>
+                                <input type="hidden" name="currentPost" value="{{post.id}}">
+                                <input type="submit" value="Post a comment"  class = "btn btn-primary">
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="memes">
+    
+                </div>
+            </div>
+        </div>
+
+
+    </div>    
+    
+
+    <script>
+        const hamburger = document.querySelector(".hamburger");
+        const navLinks = document.querySelector(".nav-links");
+        const links = document.querySelectorAll(".nav-links li");
+        hamburger.addEventListener('click', ()=>{
+        //Animate Links
+        navLinks.classList.toggle("open");
+        links.forEach(link => {
+            link.classList.toggle("fade");
+        });
+        //Hamburger Animation
+        hamburger.classList.toggle("toggle");
+        });
+    </script>
+</body>
+</html>

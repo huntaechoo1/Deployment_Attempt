@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<!-- saved from url=(0029)http://localhost:8000/profile -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Dojo Profile</title>
+    
+    <link rel="stylesheet" href="./My Dojo Profile_files/profile.css">
+    <style>
+    body{
+        background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0,0,0,0.3)), url("/static/farmville_app/images/login.jpg");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        background-attachment: fixed;
+    }
+
+    .container{
+        position: relative;
+        top: 6rem;
+        width: 80%;
+        margin: 0 auto;
+        background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));
+        box-sizing: border-box;
+        padding: 2rem;
+    }
+    
+    .left,
+    .right{
+        padding: 2rem;
+        color: #eee;
+        display: inline-block;
+        width: 45%;
+    }
+
+    #profile-pic{
+        width: 175px;
+    }
+
+    .frends{
+        border: solid 1px #eee;
+    }
+
+    .friends p {
+        line-height: 1.5rem;
+    }
+
+    .friend{
+        border-bottom: 1px solid #eee;
+        width: 175px;
+    }
+
+    /* body small screen */
+    @media screen and (max-width: 800px){
+
+    }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <img src="./My Dojo Profile_files/logo.jpg" alt="Logo Image">
+        </div>
+        <div class="hamburger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="http://localhost:8000/home" class="bar">Home</a></li>
+            <li><a href="http://localhost:8000/profile#" class="bar">Work</a></li>
+            <li><a href="http://localhost:8000/profile#" class="bar">Memes</a></li>
+            <li><a href="http://localhost:8000/profile#" class="bar">Dojo Farm</a></li>
+            <li> <a href="http://localhost:8000/logout"><button class="logout-button">Logout</button></a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="left">
+            <div class="profile-img">
+                <img id="profile-pic" src="./My Dojo Profile_files/ninja_icon.png" alt="">
+            </div>
+            <div class="friends">
+                
+                <div class="friend">
+                        <p>name</p>
+                        <p>status: online</p>
+                </div>
+                
+                <div class="friend">
+                        <p>name</p>
+                        <p>status: online</p>
+                </div>
+                
+                <div class="friend">
+                        <p>name</p>
+                        <p>status: online</p>
+                </div>
+                
+
+            </div>
+        </div>
+
+        <div class="right">
+            <div class="badges">
+    
+            </div>
+            <div class="about-me">
+    
+            </div>
+            <div class="posts">
+                <div class="messages">
+                    
+                </div>
+                <div class="memes">
+    
+                </div>
+            </div>
+        </div>
+
+
+    </div>    
+    
+
+    <script>
+        const hamburger = document.querySelector(".hamburger");
+        const navLinks = document.querySelector(".nav-links");
+        const links = document.querySelectorAll(".nav-links li");
+        hamburger.addEventListener('click', ()=>{
+        //Animate Links
+        navLinks.classList.toggle("open");
+        links.forEach(link => {
+            link.classList.toggle("fade");
+        });
+        //Hamburger Animation
+        hamburger.classList.toggle("toggle");
+        });
+    </script>
+
+</body></html>
